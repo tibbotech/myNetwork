@@ -1,0 +1,14 @@
+'DEFINES-------------------------------------------------------------
+	#define WLN_WPA 1
+	
+	#define WLN_CLK PL_IO_NUM_53
+	#define WLN_CS PL_IO_NUM_49
+	#define WLN_DI PL_IO_NUM_52
+	#define WLN_DO PL_IO_NUM_50
+	#define WLN_RST PL_IO_NUM_51
+
+'INCLUDES------------------------------------------------------------
+include "sock\trunk\sock.tbh"
+include "wln\trunk\wln.tbh"
+
+'DECLARATIONS--------------------------------------------------------

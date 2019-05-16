@@ -1,0 +1,80 @@
+include "global.tbh"
+
+'====================================================================
+
+sub on_sys_init()
+	
+	
+	net.ip = "192.168.1.216"
+	wln.ip= "192.168.2.200"
+	wln.netmask="255.255.255.0"
+	wln.gatewayip="192.168.2.200"
+	wln_init()
+	wln.boot(0)
+	
+	
+	wln.networkstart("TibboNetwork", 6)	'set network name and channel
+	
+	wln.setwep("",PL_WLN_WEP_MODE_DISABLED)	'initialize security
+	while wln.task<> PL_WLN_TASK_IDLE
+	Wend
+	
+	wln.setwpa(  PL_WLN_WPA_WPA2_PSK,   PL_WLN_WPA_ALGORITHM_AES,"12345678",  PL_WLN_WPA_CAST_MULTICAST)	'set security wpa
+	while wln.task<> PL_WLN_TASK_IDLE
+	Wend
+
+	
+	if wln.associationstate = PL_WLN_OWN_NETWORK then
+		sys.debugprint("\r\nTibboNetwork has started")
+	else
+		sys.debugprint("\r\nTibboNetwork failed")
+	end if
+		
+	
+	sock.num = 0
+	sock.protocol=PL_SOCK_PROTOCOL_TCP
+	sock.inconmode= PL_SOCK_INCONMODE_ANY_IP_ANY_PORT 
+	sock.reconmode = PL_SOCK_RECONMODE_3
+	sock.localportlist = "3000"
+	sock.allowedinterfaces = "NET,WLN" 'listen on Ethernet and Wi-Fi interfaces
+	sock.targetip="192.168.1.93"
+	sock.targetport=3000
+	
+	sock.connect
+	
+	sock.txbuffrq(1)
+	sock.rxbuffrq(1)
+	sys.buffalloc()
+
+	
+end sub
+
+
+sub on_sock_data_arrival()
+	sys.debugprint(sock.getdata(255))
+end sub
+
+
+
+sub callback_wln_ok()
+ 
+end sub
+
+'--------------------------------------------------------------------
+sub callback_wln_failure(wln_state as en_wln_status_codes)
+ 
+end sub
+
+'--------------------------------------------------------------------
+sub callback_wln_pre_buffrq(required_buff_pages as byte)
+end sub
+
+'--------------------------------------------------------------------
+sub callback_wln_rescan_result(current_rssi as byte, scan_rssi as byte, different_ap as no_yes)
+end sub
+
+sub callback_wln_starting_association()
+end sub
+
+sub callback_wln_rescan_for_better_ap()
+end sub
